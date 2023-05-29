@@ -1,17 +1,28 @@
 package com.hsproject.envmarket.service
 
+import com.hsproject.envmarket.repository.UserRepository
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.core.userdetails.User
 import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.security.core.userdetails.UserDetailsService
+import org.springframework.security.core.userdetails.UsernameNotFoundException
+import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.stereotype.Service
 
 @Service
-class UserDetailsServiceImpl : UserDetailsService {
-    override fun loadUserByUsername(username: String?): UserDetails {
-        // 본 예시에서는 하드코딩된 사용자 정보를 사용하며, 실제 구현에서는 데이터베이스 등에서 사용자 정보를 불러와야 합니다.
-        return User.withUsername("testUser")
-                .password("testPassword")
-                .roles("USER")
+class UserDetailsServiceImpl @Autowired constructor(private val userRepository: UserRepository) : UserDetailsService {
+    override fun loadUserByUsername(username: String): UserDetails {
+        val user = userRepository.findByEmail(username)
+                ?: throw UsernameNotFoundException("User not found with email: $username")
+
+        // 현재 사용자의 권한을 가져옵니다. 필요에 따라 데이터베이스에서 가져오도록 변경하세요.
+        val authorities = mutableListOf(SimpleGrantedAuthority("ROLE_USER"))
+
+        return User
+                .withUsername(user.email)
+                .password(user.password)
+                .authorities(authorities)
                 .build()
     }
 }
+

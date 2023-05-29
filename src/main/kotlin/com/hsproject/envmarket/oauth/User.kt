@@ -1,7 +1,7 @@
 package com.hsproject.envmarket.oauth
 
 
-import jakarta.persistence.*
+import javax.persistence.*
 
 @Entity
 @Table(name = "users")
