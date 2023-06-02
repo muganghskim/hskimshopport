@@ -1,11 +1,13 @@
 package com.hsproject.envmarket.config
 
-import com.hsproject.envmarket.service.UserDetailsServiceImpl
+
 import com.hsproject.envmarket.util.JwtAuthenticationEntryPoint
 import com.hsproject.envmarket.util.JwtAuthorizationFilter
+import lombok.RequiredArgsConstructor
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
+import org.springframework.security.authentication.AuthenticationManager
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
@@ -18,14 +20,14 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.web.cors.CorsConfiguration
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource
 import org.springframework.web.filter.CorsFilter
+import org.springframework.security.core.userdetails.UserDetailsService
 
 
 @Configuration
 @EnableWebSecurity
-class SecurityConfig : WebSecurityConfigurerAdapter() {
+@RequiredArgsConstructor
+class SecurityConfig(private val userDetailsService: UserDetailsService) : WebSecurityConfigurerAdapter() {
 
-    @Autowired
-    private lateinit var userDetailsService: UserDetailsServiceImpl
 
     @Autowired
     private lateinit var jwtConfig: JwtConfiguration
@@ -34,10 +36,14 @@ class SecurityConfig : WebSecurityConfigurerAdapter() {
     private lateinit var jwtAuthenticationEntryPoint: JwtAuthenticationEntryPoint
 
     @Bean
+    override fun authenticationManagerBean(): AuthenticationManager {
+        return super.authenticationManagerBean()
+    }
+    @Bean
     fun corsFilter(): CorsFilter {
         val source = UrlBasedCorsConfigurationSource()
         val config = CorsConfiguration()
-        config.allowCredentials = true
+        config.allowCredentials = false
         config.addAllowedOrigin("*")
         config.addAllowedHeader("*")
         config.addAllowedMethod("*")
@@ -55,10 +61,10 @@ class SecurityConfig : WebSecurityConfigurerAdapter() {
         return BCryptPasswordEncoder()
     }
 
-    @Autowired
     fun configureGlobal(auth: AuthenticationManagerBuilder) {
         auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder())
     }
+
 
     override fun configure(httpSecurity: HttpSecurity) {
 
@@ -68,7 +74,7 @@ class SecurityConfig : WebSecurityConfigurerAdapter() {
                 .addFilterBefore(jwtAuthorizationFilter(), UsernamePasswordAuthenticationFilter::class.java)
                 .csrf().disable()
                 .authorizeRequests()
-                .antMatchers("/auth/**").permitAll()
+                .antMatchers("/**").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .exceptionHandling().authenticationEntryPoint(jwtAuthenticationEntryPoint)
