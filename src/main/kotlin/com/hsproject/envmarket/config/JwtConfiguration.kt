@@ -8,4 +8,5 @@ import org.springframework.context.annotation.Configuration
 class JwtConfiguration {
     lateinit var secret: String
     var tokenValidity: Long = 0
+
 }
