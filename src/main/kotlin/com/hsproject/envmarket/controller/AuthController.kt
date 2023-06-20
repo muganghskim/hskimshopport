@@ -2,14 +2,11 @@ package com.hsproject.envmarket.controller
 
 import com.hsproject.envmarket.oauth.User
 import com.hsproject.envmarket.service.UserService
-import com.hsproject.envmarket.util.JwtProvider
 import lombok.extern.slf4j.Slf4j
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
-import org.springframework.security.authentication.AuthenticationManager
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.web.bind.annotation.*
 import org.slf4j.Logger
