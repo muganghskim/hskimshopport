@@ -25,17 +25,12 @@ class ProductController(private val productService: ProductService, private val 
         return ResponseEntity.ok(product)
     }
 
-//    @PostMapping("/{productId}/image")
-//    fun uploadImage(
-//            @PathVariable productId: Long,
-//            @RequestParam("file") file: MultipartFile
-//    ): ResponseEntity<Product> {
-//        val product = productService.getProductById(productId)
-//        val imageUrl = storageService.storeFile(file)
-//        val updatedProduct = product.copy(imageUrl = imageUrl)
-//        productService.updateProduct(updatedProduct)
-//        return ResponseEntity.ok(updatedProduct)
-//    }
+    //상품 등록
+    @PostMapping("/enroll")
+    fun productEnroll(@RequestBody product: Product): ResponseEntity<Product> {
+        val savedProduct = productService.insertProduct(product)
+        return ResponseEntity.ok(savedProduct)
+    }
 
     //업로드
     @PostMapping("/{productId}/image")

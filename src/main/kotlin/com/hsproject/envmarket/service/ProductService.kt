@@ -13,6 +13,13 @@ class ProductService(private val productRepository: ProductRepository) {
     fun getProductById(productId: Long): Product =
             productRepository.findById(productId).orElseThrow { EntityNotFoundException("Product not found") }
 
+    fun insertProduct(product: Product): Product {
+        if (product.id == null || !productRepository.existsById(product.id)) {
+            return productRepository.save(product)
+        }
+        throw Exception("Product already exist")
+    }
+
     fun updateProduct(product: Product): Product {
         if (product.id == null || !productRepository.existsById(product.id)) {
             throw EntityNotFoundException("Product not found")
