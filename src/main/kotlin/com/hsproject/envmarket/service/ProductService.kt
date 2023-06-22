@@ -13,6 +13,16 @@ class ProductService(private val productRepository: ProductRepository) {
     fun getProductById(productId: Long): Product =
             productRepository.findById(productId).orElseThrow { EntityNotFoundException("Product not found") }
 
+    fun getProductByName(productName: String): List<Product> {
+        val products = productRepository.findByName(productName)
+//        if (products.isNotEmpty()) {
+//            return products
+//        } else {
+//            throw EntityNotFoundException("Product not found")
+//        }
+        return products
+    }
+
     fun insertProduct(product: Product): Product {
         if (product.id == null || !productRepository.existsById(product.id)) {
             return productRepository.save(product)

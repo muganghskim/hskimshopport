@@ -1,6 +1,7 @@
 package com.hsproject.envmarket.config
 
 
+import com.hsproject.envmarket.oauth.RoleName
 import com.hsproject.envmarket.util.JwtAuthenticationEntryPoint
 import com.hsproject.envmarket.util.JwtAuthorizationFilter
 import lombok.RequiredArgsConstructor
@@ -74,6 +75,7 @@ class SecurityConfig(private val userDetailsService: UserDetailsService) : WebSe
                 .addFilterBefore(jwtAuthorizationFilter(), UsernamePasswordAuthenticationFilter::class.java)
                 .csrf().disable()
                 .authorizeRequests()
+                .antMatchers("/admin/**").hasRole(RoleName.ADMIN.name) // 관리자 권한이 있는 도메인만 접근을 허용합니다.
                 .antMatchers("/**").permitAll()
                 .anyRequest().authenticated()
                 .and()

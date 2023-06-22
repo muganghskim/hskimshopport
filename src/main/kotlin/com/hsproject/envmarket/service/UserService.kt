@@ -1,5 +1,6 @@
 package com.hsproject.envmarket.service
 
+import com.hsproject.envmarket.oauth.RoleName
 import com.hsproject.envmarket.oauth.User
 import com.hsproject.envmarket.repository.UserRepository
 import com.hsproject.envmarket.util.JwtProvider
@@ -11,6 +12,8 @@ import org.springframework.stereotype.Service
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.security.core.context.SecurityContextHolder
+import org.springframework.security.core.userdetails.UserDetails
+import java.security.Principal
 
 @Slf4j
 @Service
@@ -35,8 +38,20 @@ class UserService(private val userRepository: UserRepository,
         val token = jwtProvider.generateToken(authentication)
         logger.info("토큰 생성: $token")
 
+        // 사용자의 역할 확인
+        val userDetails = authentication.principal as UserDetails
+        val roles = userDetails.authorities.map { it.authority }
+        val isAdmin = roles.contains("ROLE_${RoleName.ADMIN}")
+
+        if (isAdmin) {
+            logger.info("관리자 권한 사용자")
+        } else {
+            logger.info("일반 사용자 권한")
+        }
+
         return token
     }
+
 
 
 }

@@ -1,5 +1,6 @@
 package com.hsproject.envmarket.oauth
 
+import com.fasterxml.jackson.annotation.JsonBackReference
 import javax.persistence.*
 
 @Entity
@@ -13,9 +14,6 @@ data class Role(
         @Column(name = "name")
         @Enumerated(EnumType.STRING)
         val name: RoleName = RoleName.NORMAL,
-
-        @ManyToMany(fetch = FetchType.LAZY, mappedBy = "roles")
-        val users: MutableSet<User> = HashSet()
 )
 enum class RoleName {
     ADMIN,

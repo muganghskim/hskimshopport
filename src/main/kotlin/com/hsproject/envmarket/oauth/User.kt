@@ -1,6 +1,7 @@
 package com.hsproject.envmarket.oauth
 
 
+import com.fasterxml.jackson.annotation.JsonManagedReference
 import javax.persistence.*
 
 @Entity
@@ -20,6 +21,7 @@ data class User(
         @Column(name = "user_name", nullable = false)
         val userName: String,
 
+        @JsonManagedReference
         @ManyToMany(fetch = FetchType.LAZY)
         @JoinTable(
                 name = "user_roles",

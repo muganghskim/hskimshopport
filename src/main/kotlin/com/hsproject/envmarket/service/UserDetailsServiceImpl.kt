@@ -18,13 +18,10 @@ class UserDetailsServiceImpl @Autowired constructor(private val userRepository: 
         val user = userRepository.findByEmail(username)
                 ?: throw UsernameNotFoundException("User not found with email: $username")
 
-        // 현재 사용자의 권한을 가져옵니다. 필요에 따라 데이터베이스에서 가져오도록 변경하세요.
-        val authorities = mutableListOf(SimpleGrantedAuthority("ROLE_USER"))
+//        // 현재 사용자의 권한을 가져옵니다. 필요에 따라 데이터베이스에서 가져오도록 변경하세요.
+//        val authorities = mutableListOf(SimpleGrantedAuthority("ROLE_USER"))
 
-//        // DB에서 현재 사용자의 권한을 가져옵니다.
-//        val userAuthorities = userAuthorityRepository.findByUserId(user.id)
-//
-//        val authorities = userAuthorities.map { authority -> SimpleGrantedAuthority(authority.name) }
+        val authorities = user.roles.map { role -> SimpleGrantedAuthority("ROLE_${role.name}") }
 
         return User
                 .withUsername(user.email)
