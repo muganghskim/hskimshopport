@@ -29,6 +29,8 @@ class AuthController(
         return userService.signUp(signUpRequest.email, signUpRequest.password, signUpRequest.username)
     }
 
+
+
 //    @PostMapping("/login")
 //    fun login(@RequestBody loginRequest: LoginRequest): Authentication {
 //        val authentication = authenticationManager.authenticate(UsernamePasswordAuthenticationToken(loginRequest.email, loginRequest.password))
@@ -47,7 +49,6 @@ class AuthController(
             ResponseEntity.status(HttpStatus.UNAUTHORIZED).build()
         }
     }
-
 
 
     @PostMapping("/logout")
