@@ -42,7 +42,7 @@ class PostgresDataSourceConfig {
     @Bean
     fun postgresEntityManagerFactory(builder: EntityManagerFactoryBuilder,
                                     @Qualifier("postgresDataSource") dataSource: DataSource?): LocalContainerEntityManagerFactoryBean? {
-        return builder.dataSource(dataSource).packages("com.hsproject.envmarket.oauth","com.hsproject.envmarket.products")
+        return builder.dataSource(dataSource).packages("com.hsproject.envmarket.oauth","com.hsproject.envmarket.products", "com.hsproject.envmarket.orders")
                 .persistenceUnit("postgresEntityManager").build()
     }
 
