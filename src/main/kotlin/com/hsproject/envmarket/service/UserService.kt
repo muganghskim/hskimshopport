@@ -11,6 +11,7 @@ import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
+import org.springframework.data.repository.findByIdOrNull
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.security.core.userdetails.UserDetails
 import java.security.Principal
@@ -27,6 +28,10 @@ class UserService(private val userRepository: UserRepository,
         val encodedPassword = passwordEncoder.encode(password)
         val user = User(email = email, password = encodedPassword, userName = username)
         return userRepository.save(user)
+    }
+
+    fun getUserByEmail(email: String): User {
+        return userRepository.findByEmail(email)
     }
 
 

@@ -2,6 +2,8 @@ package com.hsproject.envmarket.oauth
 
 
 import com.fasterxml.jackson.annotation.JsonManagedReference
+import com.hsproject.envmarket.orders.Order
+import com.hsproject.envmarket.products.CartProduct
 import javax.persistence.*
 
 @Entity
@@ -28,7 +30,13 @@ data class User(
                 joinColumns = [JoinColumn(name = "user_id")],
                 inverseJoinColumns = [JoinColumn(name = "role_id")]
         )
-        val roles: MutableSet<Role> = HashSet()
+        val roles: MutableSet<Role> = HashSet(),
+
+        @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
+        val order: MutableList<Order> = mutableListOf(),
+
+        @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
+        val cart: MutableList<CartProduct> = mutableListOf()
 ){
     //추가 메서드 구현 가능
 }

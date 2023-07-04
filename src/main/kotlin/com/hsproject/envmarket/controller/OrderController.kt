@@ -3,6 +3,7 @@ package com.hsproject.envmarket.controller
 import com.hsproject.envmarket.orders.Order
 import com.hsproject.envmarket.orders.OrderStatus
 import com.hsproject.envmarket.service.OrderService
+import com.hsproject.envmarket.service.UserService
 import lombok.extern.slf4j.Slf4j
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -12,11 +13,14 @@ import org.springframework.web.bind.annotation.*
 @RestController
 @RequestMapping("/api/orders")
 @CrossOrigin("*")
-class OrderController(private val orderService: OrderService) {
+class OrderController(private val orderService: OrderService, private val userService: UserService) {
 
     @PostMapping
     fun createOrder(@RequestBody orderRequest: NewOrderRequest): ResponseEntity<Order> {
-        val newOrder = orderService.createOrder(orderRequest.userId, orderRequest.productList)
+        val email = orderRequest.email
+        val user = userService.getUserByEmail(email)
+        val productList = orderRequest.productList
+        val newOrder = orderService.createOrder(user, productList)
         return ResponseEntity.status(HttpStatus.CREATED).body(newOrder)
     }
 
@@ -38,6 +42,6 @@ class OrderController(private val orderService: OrderService) {
 
 // 주문 요청용 클래스 추가
 data class NewOrderRequest(
-        val userId: Long,
+        val email: String, // Added email field
         val productList: List<Long>
 )
